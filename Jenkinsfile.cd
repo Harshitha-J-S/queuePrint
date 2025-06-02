@@ -9,7 +9,7 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 echo '📥 Checking out code...'
-                git url: 'https://github.com/Harshitha-J-S/queuePrint.git', branch: 'main'
+                git 'https://github.com/Harshitha-J-S/queuePrint.git'
             }
         }
 
@@ -18,20 +18,16 @@ pipeline {
                 echo '🛠️ Installing and building frontend...'
                 dir('frontend') {
                     bat 'npm install'
-
-                    // Fallback: Ensure vite is installed if not present
-                    bat 'if not exist node_modules\\vite npm install vite --save-dev'
-
-                    // Now build
-                    bat 'npx vite build'
+                    bat 'npm install vite --save-dev'
+                    bat 'node node_modules/vite/bin/vite.js build'
                 }
             }
         }
 
         stage('Deploy Infrastructure') {
             steps {
-                echo '🚀 Deploying Terraform infrastructure...'
-                dir('terraform') {
+                echo '🚀 Deploying infrastructure with Terraform...'
+                dir('infra') {
                     bat 'terraform init'
                     bat 'terraform apply -auto-approve'
                 }
@@ -40,7 +36,7 @@ pipeline {
 
         stage('Start Backend') {
             steps {
-                echo '🖥️ Starting backend server...'
+                echo '🧩 Starting backend server...'
                 dir('backend') {
                     bat 'npm install'
                     bat 'node server.js'
@@ -52,6 +48,9 @@ pipeline {
     post {
         always {
             echo '📦 CD pipeline finished.'
+        }
+        success {
+            echo '✅ Deployment successful.'
         }
         failure {
             echo '❌ Deployment failed.'
