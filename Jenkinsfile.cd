@@ -41,7 +41,7 @@ pipeline {
                 echo '🧩 Starting backend server...'
                 dir('backend') {
                     bat 'npm install'
-                    bat 'node server.js'
+                    bat 'start /B node server.js'
                 }
             }
         }
