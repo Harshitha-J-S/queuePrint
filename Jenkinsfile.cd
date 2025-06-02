@@ -18,7 +18,7 @@ pipeline {
     echo "🛠️ Installing and building frontend..."
     dir('frontend') {
       // Clean install all dependencies exactly, including devDependencies
-      bat 'npm ci'
+     bat 'npm install --include=dev'
 
       // Build frontend using vite from local node_modules
       bat 'npx vite build'
