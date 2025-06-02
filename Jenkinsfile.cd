@@ -18,7 +18,7 @@ pipeline {
             echo '🛠️ Installing and building frontend...'
             dir('frontend') {
                bat 'npm install'
-                bat 'npx vite build'
+                bat 'npm vite build'
     }
   }
 }
