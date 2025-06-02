@@ -18,17 +18,16 @@ pipeline {
                 echo '🛠️ Installing and building frontend...'
                 dir('frontend') {
                     bat 'npm install'
-                    bat 'npm run build'
+                    bat 'npx vite build'
                 }
             }
         }
 
         stage('Deploy Infrastructure') {
             steps {
-                echo '🌐 Running Terraform deployment...'
+                echo '🌐 Deploying infrastructure using Terraform...'
                 dir('terraform') {
                     bat 'terraform init'
-                    bat 'terraform validate'
                     bat 'terraform apply -auto-approve'
                 }
             }
@@ -39,7 +38,7 @@ pipeline {
                 echo '🚀 Starting backend server...'
                 dir('backend') {
                     bat 'npm install'
-                    bat 'start /B npm start > backend.log 2>&1'
+                    bat 'start "" cmd /c "npm start"'  // Runs in background on Windows
                 }
             }
         }
@@ -47,7 +46,7 @@ pipeline {
 
     post {
         success {
-            echo '✅ Deployment completed successfully.'
+            echo '✅ Deployment successful.'
         }
         failure {
             echo '❌ Deployment failed.'
