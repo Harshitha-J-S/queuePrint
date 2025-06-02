@@ -13,16 +13,15 @@ pipeline {
             }
         }
 
-        stage('Build Frontend') {
-            steps {
-                echo '🛠️ Installing and building frontend...'
-                dir('frontend') {
-                    bat 'npm install'
-                    bat 'npm install vite --save-dev'
-                    bat 'node node_modules/vite/bin/vite.js build'
-                }
-            }
-        }
+       stage('Build Frontend') {
+         steps {
+            echo '🛠️ Installing and building frontend...'
+            dir('frontend') {
+               bat 'npm install'
+                bat 'npx vite build'
+    }
+  }
+}
 
         stage('Deploy Infrastructure') {
             steps {
