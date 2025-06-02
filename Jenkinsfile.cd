@@ -13,12 +13,15 @@ pipeline {
             }
         }
 
-       stage('Build Frontend') {
-         steps {
-            echo '🛠️ Installing and building frontend...'
-            dir('frontend') {
-               bat 'npm install'
-                bat 'npx vite build'
+      stage('Build Frontend') {
+  steps {
+    echo "🛠️ Installing and building frontend..."
+    dir('frontend') {
+      // Clean install all dependencies exactly, including devDependencies
+      bat 'npm ci'
+
+      // Build frontend using vite from local node_modules
+      bat 'npx vite build'
     }
   }
 }
