@@ -1,36 +1,45 @@
 pipeline {
     agent any
 
+    environment {
+        NODE_ENV = 'production'
+    }
+
     stages {
         stage('Checkout Code') {
             steps {
+                echo '📥 Checking out code...'
                 git url: 'https://github.com/Harshitha-J-S/queuePrint.git', branch: 'main'
             }
         }
 
         stage('Build Frontend') {
             steps {
+                echo '🛠️ Installing and building frontend...'
                 dir('frontend') {
-                    sh 'npm install'
-                    sh 'npm run build'
+                    bat 'npm install'
+                    bat 'npm run build'
                 }
             }
         }
 
-        stage('Deploy Terraform') {
+        stage('Deploy Infrastructure') {
             steps {
+                echo '🌐 Running Terraform deployment...'
                 dir('terraform') {
-                    sh 'terraform init'
-                    sh 'terraform apply -auto-approve'
+                    bat 'terraform init'
+                    bat 'terraform validate'
+                    bat 'terraform apply -auto-approve'
                 }
             }
         }
 
         stage('Start Backend') {
             steps {
+                echo '🚀 Starting backend server...'
                 dir('backend') {
-                    sh 'npm install'
-                    sh 'npm start &'
+                    bat 'npm install'
+                    bat 'start /B npm start > backend.log 2>&1'
                 }
             }
         }
@@ -38,10 +47,13 @@ pipeline {
 
     post {
         success {
-            echo 'Deployment successful.'
+            echo '✅ Deployment completed successfully.'
         }
         failure {
-            echo 'Deployment failed.'
+            echo '❌ Deployment failed.'
+        }
+        always {
+            echo '📦 CD pipeline finished.'
         }
     }
 }
