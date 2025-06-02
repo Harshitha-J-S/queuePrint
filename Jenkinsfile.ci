@@ -32,7 +32,13 @@ pipeline {
         stage('Run Backend Tests') {
             steps {
                 dir('backend') {
-                    bat 'npm test || echo "No backend tests"'
+                    bat '''
+                        npm test
+                        if %ERRORLEVEL% NEQ 0 (
+                            echo No backend tests
+                            exit /B 0
+                        )
+                    '''
                 }
             }
         }
@@ -40,7 +46,13 @@ pipeline {
         stage('Run Frontend Tests') {
             steps {
                 dir('frontend') {
-                    bat 'npm test || echo "No frontend tests"'
+                    bat '''
+                        npm test
+                        if %ERRORLEVEL% NEQ 0 (
+                            echo No frontend tests
+                            exit /B 0
+                        )
+                    '''
                 }
             }
         }
