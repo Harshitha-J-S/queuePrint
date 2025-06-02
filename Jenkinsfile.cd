@@ -9,7 +9,7 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 echo '📥 Checking out code...'
-                git 'https://github.com/Harshitha-J-S/queuePrint.git'
+                git branch: 'main', url: 'https://github.com/Harshitha-J-S/queuePrint.git'
             }
         }
 
