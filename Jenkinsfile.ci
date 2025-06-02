@@ -4,7 +4,12 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                git url: 'https://github.com/Harshitha-J-S/queuePrint.git', branch: 'main'
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: '*/main']],
+                    userRemoteConfigs: [[url: 'https://github.com/Harshitha-J-S/queuePrint.git']],
+                    extensions: [[$class: 'CloneOption', depth: 1, noTags: false, shallow: true]]
+                ])
             }
         }
 
@@ -27,7 +32,7 @@ pipeline {
         stage('Run Backend Tests') {
             steps {
                 dir('backend') {
-                    sh 'npm test || echo "No backend tests"'
+                    bat 'npm test || echo "No backend tests"'
                 }
             }
         }
