@@ -18,6 +18,11 @@ pipeline {
                 echo '🛠️ Installing and building frontend...'
                 dir('frontend') {
                     bat 'npm install'
+
+                    // Fallback: Ensure vite is installed if not present
+                    bat 'if not exist node_modules\\vite npm install vite --save-dev'
+
+                    // Now build
                     bat 'npx vite build'
                 }
             }
@@ -25,7 +30,7 @@ pipeline {
 
         stage('Deploy Infrastructure') {
             steps {
-                echo '🌐 Deploying infrastructure using Terraform...'
+                echo '🚀 Deploying Terraform infrastructure...'
                 dir('terraform') {
                     bat 'terraform init'
                     bat 'terraform apply -auto-approve'
@@ -35,24 +40,21 @@ pipeline {
 
         stage('Start Backend') {
             steps {
-                echo '🚀 Starting backend server...'
+                echo '🖥️ Starting backend server...'
                 dir('backend') {
                     bat 'npm install'
-                    bat 'start "" cmd /c "npm start"'  // Runs in background on Windows
+                    bat 'node server.js'
                 }
             }
         }
     }
 
     post {
-        success {
-            echo '✅ Deployment successful.'
+        always {
+            echo '📦 CD pipeline finished.'
         }
         failure {
             echo '❌ Deployment failed.'
-        }
-        always {
-            echo '📦 CD pipeline finished.'
         }
     }
 }
