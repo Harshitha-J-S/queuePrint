@@ -29,7 +29,7 @@ pipeline {
         stage('Deploy Infrastructure') {
             steps {
                 echo '🚀 Deploying infrastructure with Terraform...'
-                dir('infra') {
+                dir('terraform') {
                     bat 'terraform init'
                     bat 'terraform apply -auto-approve'
                 }
